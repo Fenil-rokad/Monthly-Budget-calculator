@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A simple budget calculator web application." />
+  <meta name="author" content="Your Name" />
+  <title>Budget Calculator</title>
+  <link rel="stylesheet" href="budget.css" />
+  <link rel="icon" type="image/png" href="icon.png" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="box">
+      <p class="heading">Available budget in <span class="date">Date</span></p>
+      <h1 class="head1">- 0.00</h1>
+
+      <p id="in">Income <span class="in">+0.00</span></p>
+      <p id="ex">Expense <span class="ex">-0.00</span></p>
+
+      <div class="sub">
+        <select class="in-out">
+          <option value="income">+</option>
+          <option value="expense">-</option>
+        </select>
+        <input type="text" class="desc" placeholder="Add description" />
+        <input type="number" class="value" placeholder="Value" />
+        <button class="add">
+          <img src="icon.png" alt="Add" class="add_icon" />
+        </button>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="income">
+        <h2 class="title">Income</h2>
+        <div class="income_list"></div>
+      </div>
+
+      <div class="expense">
+        <h2 class="title">Expense</h2>
+        <div class="expense_list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="budget.js"></script>
+</body>
+
+</html>

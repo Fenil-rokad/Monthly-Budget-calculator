@@ -1,0 +1,132 @@
+// //it will control all the calculations
+// var calcCtrl = (function () {
+//   //object constructor function for income
+//   var constINC = function (id, desc, value) {
+//     this.id = id;
+//     this.desc = desc;
+//     this.value = value;
+//   };
+
+//   //object constructor function for expense
+//   var constEXP = function (id, desc, value) {
+//     this.id = id;
+//     this.desc = desc;
+//     this.value = value;
+//   };
+
+//   //object to contain all incomes and expenses and their totals
+//   var vals = {
+//     //object for income and expense
+//     allinput: {
+//       income: [],
+//       expense: [],
+
+//     },
+
+//     //object for total of all income and expense
+//     totalall: {
+//       totalINC: 0,
+//       totalEXP: 0,
+//     },
+//   };
+
+//   //total of everything
+//   var total = 0;
+
+//   return {
+//     //method to get data from mainCtrl
+//     getinput: function (type, desc, value) {
+//       var newItem, id;
+
+//       //assigning id
+//       if(vals.allinput[type].length > 0) {
+//         id = vals.allinput[type][vals.allinput[type].length - 1].id + 1;
+//       } else if (vals.allinput[type].length == 0) {
+//         id = 0;
+//       }
+
+//       //creating object based on the type
+//       if (type == "income") {
+//         newItem = new constINC(id, desc, value);
+//       } else if (type == "expense") {
+//         newItem = new constEXP(id, desc, value);
+//       }
+
+//       //assigning values to the array
+//       vals.allinput[type].push(value);
+//     },
+
+//     test: function () {
+//       console.log(vals);
+//     },
+//   };
+// })();
+
+// //user input controller
+// var UICtrl = (function () {
+//   //listing all class names
+//   const class_list = {
+//     type: ".in-out",
+//     desc: ".desc",
+//     amount: ".value",
+//     add: ".add",
+//   };
+
+//   //returning object
+//   return {
+//     // function to take all the values from input field
+//     getValue: function () {
+//       return {
+//         type: document.querySelector(class_list.type).value,
+//         desc: document.querySelector(class_list.desc).value,
+//         amount: document.querySelector(class_list.amount).value,
+//       };
+//     },
+
+//     //function to return class_list object
+//     passArgs: function () {
+//       return class_list;
+//     },
+//   };
+// })();
+
+// //Main Controller
+// var mainCtrl = (function () {
+//   //importing class list from UICtrl
+//   var class_list = UICtrl.passArgs();
+
+//   //function to take all the user inputs
+//   function input() {
+//     //calling the UIctrl getvalue object  method
+//     var input = UICtrl.getValue();
+//     // console.log(input);
+//   }
+
+//   var sendInput = calcCtrl.getinput(input.type, input.desc, input.amount);
+
+//   //function to start the execution
+//   function start() {
+//     //event to perform task on mouse click
+//     document.querySelector(class_list.add).addEventListener("click", input);
+
+//     //event to perform task on enter keypress
+//     document
+//       .querySelector(class_list.add)
+//       .addEventListener("keypress", function (event) {
+//         if (event.keycode == 13 || event.which == 13) {
+//           input;
+//         }
+//       });
+//   }
+
+//   return {
+//     // function which calls and returns the start function
+//     starting: function () {
+//       console.log("started");
+//       start();
+//     },
+//   };
+// })(calcCtrl, UICtrl);
+
+// //starting the application
+// mainCtrl.starting();

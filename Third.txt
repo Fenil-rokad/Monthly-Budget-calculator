@@ -1,0 +1,215 @@
+// This module controls all the calculations for income and expenses
+// var calcCtrl = (function () {
+//   // Constructor function for income items
+//   var constINC = function (id, desc, value) {
+//     this.id = id;
+//     this.desc = desc;
+//     this.value = value;
+//   };
+
+//   // Constructor function for expense items
+//   var constEXP = function (id, desc, value) {
+//     this.id = id;
+//     this.desc = desc;
+//     this.value = value;
+//   };
+
+//   // Function to calculate total income and expenses
+//   var calcBudget = function () {
+//     vals.totalall.income = vals.allinput.income.reduce((sum, i) => sum + i.value, 0);
+//     vals.totalall.expense = vals.allinput.expense.reduce((sum, i) => sum + i.value, 0);
+//   };
+
+//   // Object to hold all incomes, expenses, and totals
+//   var vals = {
+//     allinput: {
+//       income: [],  // Array to store income items
+//       expense: [], // Array to store expense items
+//     },
+//     totalall: {
+//       income: 0,  // Total income
+//       expense: 0, // Total expense
+//     },
+//     budget: 0,    // Net budget
+//     percent: -1,  // Percentage of expenses
+//   };
+
+//   return {
+//     // Method to add input data
+//     getinput: function (type, desc, value) {
+//       var newItem, id;
+
+//       // Assign a unique ID
+//       id = vals.allinput[type].length > 0 
+//           ? vals.allinput[type][vals.allinput[type].length - 1].id + 1 
+//           : 0;
+
+//       // Create a new item based on the type
+//       if (type === "income") {
+//         newItem = new constINC(id, desc, value);
+//       } else if (type === "expense") {
+//         newItem = new constEXP(id, desc, value);
+//       }
+
+//       // Add the new item to the appropriate array
+//       vals.allinput[type].push(newItem);
+//       return newItem; // Return the new item for UI use
+//     },
+
+//     // Method to calculate the budget and percentage
+//     budget: function () {
+//       calcBudget(); // Calculate totals
+//       vals.budget = vals.totalall.income - vals.totalall.expense; // Calculate net budget
+//       // vals.percent = (vals.totalall.expense / vals.totalall.income) * 100+'%'; // Calculate percentage
+//       var perc = (vals.totalall.expense / vals.totalall.income) * 100;
+//       vals.percent = perc.toFixed(2); 
+//       document.querySelector(".item_per").textContent = vals.percent; // Update UI
+//     },
+
+//     // Method to return all calculated values
+//     retBudget: function () {
+//       return {
+//         budget: vals.budget,
+//         totalInc: vals.totalall.income,
+//         totalExp: vals.totalall.expense,
+//         percent: vals.percent,
+//       };
+//     },
+
+//     // Debugging function to showcase all values
+//     test: function () {
+//       console.log(vals);
+//     },
+//   };
+// })();
+
+// // User input controller
+// var UICtrl = (function () {
+//   // Object to hold class names for easy reference
+//   const class_list = {
+//     type: ".in-out",
+//     desc: ".desc",
+//     amount: ".value",
+//     add: ".add",
+//     budget_total: ".head1",
+//     income_total: ".in",
+//     expense_total: ".ex",
+//     percent: ".percent",
+//     income_list: ".income_list",
+//     expense_list: ".expense_list"
+//   };
+
+//   return {
+//     // Function to get values from input fields
+//     getValue: function () {
+//       return {
+//         type: document.querySelector(class_list.type).value,
+//         desc: document.querySelector(class_list.desc).value,
+//         amount: parseFloat(document.querySelector(class_list.amount).value) || 0, // Ensure amount is a number
+//       };
+//     },
+
+//     // Function to add new items to the income or expense table
+//     addItem: function (newEle, type) {
+//       var html, newHTML;
+//       // Define HTML structure based on type
+//       if (type === "income") {
+//         html = '<div class="item" id="income-_id_"><div class="item_desc">_desc_</div><div class="item_value">_value_</div><div class="item_delete"><button class="delete-btn"><img src="delete.png" alt="" /></button></div></div>';
+//       } else if (type === "expense") {
+//         // Fetch percentage from calcCtrl
+//         const perc = calcCtrl.retBudget();
+//         html = '<div class="item" id="expense-_id_"><div class="item_desc">_desc_</div><div class="item_value">_value_</div><div class="item_per">' + perc.percent + '%</div><div class="item_delete"><button class="delete-btn"><img src="delete.png" alt="" /></button></div></div>';
+//       }
+
+//       // Replace placeholders with actual values
+//       newHTML = html.replace("_id_", newEle.id);
+//       newHTML = newHTML.replace("_desc_", newEle.desc);
+//       newHTML = newHTML.replace("_value_", newEle.value);
+
+//       // Add the new item to the appropriate UI list
+//       if (type == "income") {
+//         document.querySelector(class_list.income_list).insertAdjacentHTML("beforeend", newHTML);
+//       } else {
+//         document.querySelector(class_list.expense_list).insertAdjacentHTML("beforeend", newHTML);
+//       }
+//     },
+
+//     // Function to clear input fields after submission
+//     clearItem: function () {
+//       var field, fieldArr;
+//       field = document.querySelectorAll(class_list.desc + "," + class_list.amount);
+//       fieldArr = Array.prototype.slice.call(field);
+
+//       fieldArr.forEach(function (i) {
+//         i.value = ""; // Clear each input field
+//       });
+
+//       fieldArr[0].focus(); // Focus back to the description input
+//     },
+
+//     // Function to display the budget in the UI
+//     displayBudget: function (budget_value) {
+//       document.querySelector(class_list.budget_total).textContent = budget_value.budget;
+//       document.querySelector(class_list.income_total).textContent = budget_value.totalInc;
+//       document.querySelector(class_list.expense_total).textContent = budget_value.totalExp;
+
+//       // Display percentage
+//       document.querySelector(class_list.percent).innerHTML = (budget_value.percent > 0) 
+//         ? '+' + budget_value.percent + '%' 
+//         : 'NaN%';
+//     },
+
+//     // Function to return class_list object
+//     passArgs: function () {
+//       return class_list;
+//     },
+//   };
+// })(calcCtrl);
+
+// // Main Controller
+// var mainCtrl = (function (calcCtrl, UICtrl) {
+//   // Importing class list from UICtrl
+//   var class_list = UICtrl.passArgs();
+
+//   // This function updates the budget
+//   var updateBudget = function () {
+//     // Calculate the budget
+//     calcCtrl.budget();
+//     // Retrieve and display the budget
+//     var budget = calcCtrl.retBudget();
+//     UICtrl.displayBudget(budget);
+//   };
+
+//   // Function to handle user input
+//   function input() {
+//     var input = UICtrl.getValue(); // Get values from UI
+//     if (input.desc && !isNaN(input.amount) && input.amount > 0) { // Validate input
+//       var newItem = calcCtrl.getinput(input.type, input.desc, input.amount); // Add new item
+//       UICtrl.addItem(newItem, input.type); // Update UI with new item
+//     }
+//     UICtrl.clearItem(); // Clear input fields
+//     updateBudget(); // Update budget display
+
+//   }
+
+//   // Function to initialize event listeners
+//   function start() {
+//     document.querySelector(class_list.add).addEventListener("click", input); // Click event
+//     document.querySelector(class_list.add).addEventListener("keypress", function (event) {
+//       if (event.keyCode === 13 || event.which === 13) { // Enter key event
+//         input();
+//       }
+//     });
+//   }
+
+//   return {
+//     // Function to start the application
+//     starting: function () {
+//       console.log("Application started");
+//       start();
+//     },
+//   };
+// })(calcCtrl, UICtrl);
+
+// // Starting the application
+// mainCtrl.starting();

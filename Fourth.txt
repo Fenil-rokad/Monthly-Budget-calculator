@@ -1,0 +1,284 @@
+// // it will control all the calculations
+// var calcCtrl = (function () {
+//   // object constructor function for income
+//   var constINC = function (id, desc, value) {
+//     this.id = id;
+//     this.desc = desc;
+//     this.value = value;
+//   };
+
+//   // object constructor function for expense
+//   var constEXP = function (id, desc, value) {
+//     this.id = id;
+//     this.desc = desc;
+//     this.value = value;
+//   };
+
+//   //it will calculate the total income and expense
+//   var calcBudget = function (type) {
+//     var sum = 0;
+//     vals.allinput[type].forEach(function (i) {
+//       sum += i.value;
+//     });
+//     vals.totalall[type] = sum;
+//   };
+//   // object to contain all incomes and expenses and their totals
+//   var vals = {
+//     // object for income and expense
+//     allinput: {
+//       income: [],
+//       expense: [],
+//     },
+
+//     // object for total of all income and expense
+//     totalall: {
+//       income: 0,
+//       expense: 0,
+//     },
+//     budget: 0,
+//     percent: -1,
+//   };
+
+//   return {
+//     // method to get data from mainCtrl
+//     getinput: function (type, desc, value) {
+//       var newItem, id;
+
+//       // assigning id
+//       if (vals.allinput[type].length > 0) {
+//         id = vals.allinput[type][vals.allinput[type].length - 1].id + 1;
+//       } else {
+//         id = 0;
+//       }
+
+//       // creating object based on the type
+//       if (type === "income") {
+//         newItem = new constINC(id, desc, value);
+//       } else if (type === "expense") {
+//         newItem = new constEXP(id, desc, value);
+//       }
+
+//       // assigning values to the array
+//       vals.allinput[type].push(newItem);
+//       return newItem; // Return the new item to use in UICtrl
+//     },
+
+//     //method to calculate the budget and percentage
+//     budget: function (type) {
+//       calcBudget(type);
+
+//       vals.budget = vals.totalall.income - vals.totalall.expense;
+//       vals.percent = Math.round(
+//         (vals.totalall.expense / vals.totalall.income) * 100
+//       );
+//       // document.querySelector(".item_per").textContent = vals.percent;
+//     },
+
+//     //method to return all the values
+//     retBudget: function () {
+//       return {
+//         budget: vals.budget,
+//         totalInc: vals.totalall.income,
+//         totalExp: vals.totalall.expense,
+//         percent: vals.percent,
+//       };
+//     },
+
+//     //deleting the item
+//     deleteItem: function(id, type){
+//       var i_d, index ;
+//       vals.allinput[type].map(function(i){
+//         return i.id;
+//       });
+
+//       index = i_d.indexOf(id);
+
+//       if(index != -1){
+//         vals.allinput[type].splice(index, 1);
+//       }
+//     },
+
+//     //function to showcase all the values
+//     test: function () {
+//       console.log(vals);
+//     },
+//   };
+// })();
+
+// // user input controller
+// var UICtrl = (function () {
+//   // listing all class names
+//   const class_list = {
+//     type: ".in-out",
+//     desc: ".desc",
+//     amount: ".value",
+//     add: ".add",
+//     budget_total: ".head1",
+//     income_total: ".in",
+//     expense_total: ".ex",
+//     percent: ".percent",
+//     income_list: ".income_list",
+//     expense_list: ".expense_list",
+//     bottom: ".bottom"
+//   };
+
+//   // returning object
+//   return {
+//     // function to take all the values from input field
+//     getValue: function () {
+//       return {
+//         type: document.querySelector(class_list.type).value,
+//         desc: document.querySelector(class_list.desc).value,
+//         amount: parseFloat(document.querySelector(class_list.amount).value) // Ensure amount is a number
+//       };
+//     },
+
+//     //function that will add new items to the income or expense table
+//     addItem: function (newEle, type) {
+//       var html, newHTML;
+//       if (type === "income") {
+//         html =
+//           '<div class="item" id="income-_id_"><div class="item_desc">_desc_</div><div class="item_value">_value_</div><div class="item_delete"><button class="delete-btn"><img src="delete.png" alt="" /></button></div></div>';
+//       } else if (type === "expense") {
+//         html =
+//           '<div class="item" id="expense-_id_"><div class="item_desc">_desc_</div><div class="item_value">_value_</div><div class="item_per">_percent_</div><div class="item_delete"><button class="delete-btn"><img src="delete.png" alt="" /></button></div></div>';
+
+//       }
+
+//       //replacing Keywords from actial values
+//       newHTML = html.replace("_id_", newEle.id);
+//       newHTML = newHTML.replace("_desc_", newEle.desc);
+//       newHTML = newHTML.replace("_value_", newEle.value);
+//       var x = calcCtrl.retBudget();
+//       newHTML = newHTML.replace("_percent_", x.percent+'%');
+
+//       //adding the value to UI
+//       if (type == "income") {
+//         document
+//           .querySelector(class_list.income_list)
+//           .insertAdjacentHTML("beforeend", newHTML);
+//       } else {
+//         document
+//           .querySelector(class_list.expense_list)
+//           .insertAdjacentHTML("beforeend", newHTML);
+//       }
+//     },
+
+//     //function to clear input fields after pressing the submit button
+//     clearItem: function () {
+//       var field, fieldArr;
+//       field = document.querySelectorAll(
+//         class_list.desc + "," + class_list.amount
+//       );
+
+//       fieldArr = Array.prototype.slice.call(field);
+//       console.log(fieldArr);
+
+//       fieldArr.forEach(function (i, index, arr) {
+//         i.value = "";
+//       });
+
+//       fieldArr[0].focus();
+//     },
+
+//     displayBudget: function (budget_value) {
+//       document.querySelector(class_list.budget_total).textContent =
+//         budget_value.budget;
+//       document.querySelector(class_list.income_total).textContent =
+//         budget_value.totalInc;
+//       document.querySelector(class_list.expense_total).textContent =
+//         budget_value.totalExp;
+
+//         // if(budget_value.percent > 0){
+//         //   document.querySelector(class_list.percent).textContent =
+//         // '+'+budget_value.percent+'%';
+//         // }
+//         // else{
+//         //   document.querySelector(class_list.percent).textContent =
+//         // '--%';
+//         // }
+//     },
+
+//     // function to return class_list object
+//     passArgs: function () {
+//       return class_list;
+//     },
+//   };
+// })(calcCtrl);
+
+// // Main Controller
+// var mainCtrl = (function (calcCtrl, UICtrl) {
+//   // importing class list from UICtrl
+//   var class_list = UICtrl.passArgs();
+
+//   //defining function to delete items
+//   var deleteEle = function(event){
+//     var item, type, id, splitItem;
+
+//     //selecting the id of item list
+//     item = event.target.parentNode.parentNode.parentNode.id;
+
+//     //saperating id number from id string
+//     splitItem = item.split("-");
+//     type = splitItem[0];
+//     id = parseInt(splitItem[1]);
+//     calcCtrl.deleteItem(id, type);
+//     // console.log(id);
+//   };
+
+//   //This function will update the budget
+//   var updateBydget = function (type) {
+//     //calculating the budget
+//     calcCtrl.budget(type);
+
+//     //returning the budget and storing it
+//     var budget = calcCtrl.retBudget();
+//     //displaying the budget on UI
+//     UICtrl.displayBudget(budget);
+//   };
+
+//   // function to take all the user inputs
+//   function input() {
+//     // calling the UIctrl getvalue object method
+//     var input = UICtrl.getValue();
+
+//     if (input.desc && !isNaN(input.amount)) {
+//       // Check if description is not empty and amount is a number
+//       var newItem = calcCtrl.getinput(input.type, input.desc, input.amount); // Get the new item
+
+//       UICtrl.addItem(newItem, input.type); // Add the item to the UI
+//     }
+//     //calling clearItem to clear input fields after input is given
+//     UICtrl.clearItem();
+//     updateBydget(input.type);
+//   }
+
+//   // function to start the execution
+//   function start() {
+//     // event to perform task on mouse click
+//     document.querySelector(class_list.add).addEventListener("click", input);
+
+//     // event to perform task on enter keypress
+//     document
+//       .querySelector(class_list.add)
+//       .addEventListener("keypress", function (event) {
+//         if (event.keyCode === 13 || event.which === 13) {
+//           input();
+//         }
+//       });
+
+//       //to delete the whole list when delete button is pressed
+//       document.querySelector(class_list.bottom).addEventListener("click", deleteEle);
+//   }
+
+//   return {
+//     // function which calls and returns the start function
+//     starting: function () {
+//       console.log("started");
+//       start();
+//     },
+//   };
+// })(calcCtrl, UICtrl);
+
+// // starting the application
+// mainCtrl.starting();
